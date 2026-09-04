@@ -1,12 +1,16 @@
-# Python
+# Python bytecode & cache
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+
+# Virtual environments
 env/
 venv/
 ENV/
+
+# Distribution & packages
 build/
 develop-eggs/
 dist/
@@ -31,17 +35,22 @@ db.sqlite3-journal
 media/
 staticfiles/
 
-# Environment variables
+# Environment files
 .env
 .env.local
+.env.*.local
 
-# Pytest / Coverage
+# Pytest, Coverage & Test artifacts
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
+*.cover
 
-# IDEs
+# IDEs & System
 .vscode/
 .idea/
 *.swp
 *.swo
+.DS_Store
+Thumbs.db
