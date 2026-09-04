@@ -1,10 +1,10 @@
-# Healthcare Backend System (Django & DRF) - Phase 1: Doctor Management
+# Healthcare Backend System (Django & DRF)
 
 A clean-architecture Django backend for a healthcare application built with **Django 5**, **Django REST Framework (DRF)**, **PostgreSQL 16**, **JWT Authentication** (`djangorestframework-simplejwt`), **Dependency Injection (DI)**, **Docker containerization**, and a **Centralized Pytest Harness with In-Memory DB Mocks**.
 
 ---
 
-## 📁 Project Structure (Phase 1: Doctor Management)
+## 📁 Project Structure
 
 ```
 health_care_app/
@@ -20,7 +20,18 @@ health_care_app/
 │   └── wsgi.py                          # WSGI interface
 │
 ├── apps/
-│   └── doctors/                         # Feature 1: Doctor Management Module
+│   ├── accounts/                        # Authentication & User Management Module
+│   │   ├── __init__.py
+│   │   ├── apps.py
+│   │   ├── interfaces.py                # IUserRepository, ITokenService abstractions
+│   │   ├── models.py                    # Custom User model with B-Tree indexes
+│   │   ├── repositories.py              # DjangoUserRepository (ORM)
+│   │   ├── serializers.py               # Register & Login serializers
+│   │   ├── services.py                  # AuthService (DI) & JWTTokenService
+│   │   ├── urls.py                      # Auth URL routing
+│   │   └── views.py                     # RegisterView, LoginView, UserProfileView
+│   │
+│   └── doctors/                         # Doctor Management Module
 │       ├── __init__.py
 │       ├── apps.py
 │       ├── interfaces.py                # IDoctorRepository abstraction
@@ -29,13 +40,14 @@ health_care_app/
 │       ├── serializers.py               # Doctor serializers & validation
 │       ├── services.py                  # DoctorService (DI)
 │       ├── urls.py                      # Doctor URL routing
-│       └── views.py                     # Injected APIViews
+│       └── views.py                     # DoctorListCreateView, DoctorDetailView
 │
 ├── tests/                               # Centralized Pytest Test Suite
 │   ├── __init__.py
 │   ├── conftest.py                      # Global fixtures & DI Container auto-mocking
-│   ├── mocks.py                         # In-memory mock repositories
+│   ├── mocks.py                         # In-memory mock repositories (User, Doctor, Patient, Mapping)
 │   ├── test_init_setup.py               # Core smoke tests
+│   ├── test_auth_feature.py             # Auth & Security Pytest Feature Suite (11 test cases)
 │   └── test_doctor_feature.py           # Doctor Management Pytest Feature Suite (16 test cases)
 │
 ├── .dockerignore                        # Docker build ignore rules
@@ -65,14 +77,24 @@ docker compose up -d --build
 docker compose exec web python manage.py migrate
 ```
 
-### 3. Run Pytest Test Suite Inside Docker
+### 3. Run All Pytest Tests Inside Docker
 ```powershell
 docker compose exec web pytest
 ```
 
 ---
 
-## 📋 Doctor Management APIs
+## 📋 Available APIs
+
+### 1. Authentication APIs (`/api/auth/`)
+
+| Method | Endpoint | Description | Request Body | Status Code |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/register/` | Register a new user | `{"name": "Dr. Watson", "email": "watson@live.com", "password": "SuperSecret123!"}` | `201 Created` (returns `user` & `token`) |
+| `POST` | `/api/auth/login/` | Authenticate user & get JWT | `{"email": "watson@live.com", "password": "SuperSecret123!"}` | `200 OK` (returns `user` & `token`) |
+| `GET` | `/api/auth/me/` | Current user profile | None (Bearer JWT required) | `200 OK` |
+
+### 2. Doctor Management APIs (`/api/doctors/`)
 
 | Method | Endpoint | Description | Request Body | Status Code |
 | :--- | :--- | :--- | :--- | :--- |

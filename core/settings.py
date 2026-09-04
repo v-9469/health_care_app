@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
 
     # Domain Apps
+    'apps.accounts',
     'apps.doctors',
 ]
 
@@ -103,6 +104,9 @@ if env('DB_USE_SQLITE_FALLBACK') and os.environ.get('USE_SQLITE', 'False').lower
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+
+# Custom User Model
+AUTH_USER_MODEL = 'accounts.User'
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
