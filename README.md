@@ -1,4 +1,4 @@
-# Healthcare Backend System (Django & DRF) - Phase 0
+# Healthcare Backend System (Django & DRF) 
 
 A clean-architecture Django foundation for a healthcare application built with **Django 5**, **Django REST Framework (DRF)**, **PostgreSQL 16**, **JWT Authentication** (`djangorestframework-simplejwt`), **Dependency Injection (DI)**, **Docker containerization**, and a **Centralized Pytest Harness with In-Memory DB Mocks**.
 
