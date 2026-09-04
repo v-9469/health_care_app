@@ -1,8 +1,8 @@
 """
-Master URL Configuration for healthcare project (Phase 0: Core Setup).
+Master URL Configuration for healthcare project.
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -17,9 +17,6 @@ urlpatterns = [
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
-    # Feature app routes will be mounted in their respective phases:
-    # Phase 1: path('api/auth/', include('apps.accounts.urls'))
-    # Phase 2: path('api/patients/', include('apps.patients.urls'))
-    # Phase 3: path('api/doctors/', include('apps.doctors.urls'))
-    # Phase 4: path('api/mappings/', include('apps.mappings.urls'))
+    # Doctor Management APIs (Phase 1)
+    path('api/doctors/', include('apps.doctors.urls')),
 ]

@@ -41,11 +41,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
 
-    # Feature Apps will be added in their respective phases:
-    # Phase 1 -> 'apps.accounts'
-    # Phase 2 -> 'apps.patients'
-    # Phase 3 -> 'apps.doctors'
-    # Phase 4 -> 'apps.mappings'
+    # Domain Apps
+    'apps.doctors',
 ]
 
 MIDDLEWARE = [

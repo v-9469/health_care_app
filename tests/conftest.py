@@ -1,39 +1,56 @@
 """
-Pytest global fixtures and Dependency Injection setup for Phase 0.
+Pytest global fixtures and Dependency Injection setup for Doctor Management.
 """
 import pytest
 from rest_framework.test import APIClient
+from django.contrib.auth.models import AnonymousUser
 from core.container import Container
 from tests.mocks import (
-    MockUserRepository,
-    MockPatientRepository,
     MockDoctorRepository,
-    MockMappingRepository
+    MockUser
 )
+from apps.doctors.services import DoctorService
+
 
 @pytest.fixture(autouse=True)
 def mock_container_dependencies():
     """
-    Overrides the DI Container with in-memory mock repositories for Phase 0.
+    Overrides the DI Container with in-memory mock repositories for all tests.
     """
-    mock_user_repo = MockUserRepository()
-    mock_patient_repo = MockPatientRepository()
     mock_doctor_repo = MockDoctorRepository()
-    mock_mapping_repo = MockMappingRepository()
+    doctor_service = DoctorService(doctor_repo=mock_doctor_repo)
 
-    Container.register("user_repository", lambda: mock_user_repo)
-    Container.register("patient_repository", lambda: mock_patient_repo)
     Container.register("doctor_repository", lambda: mock_doctor_repo)
-    Container.register("mapping_repository", lambda: mock_mapping_repo)
+    Container.register("doctor_service", lambda: doctor_service)
 
     return {
-        "user_repo": mock_user_repo,
-        "patient_repo": mock_patient_repo,
         "doctor_repo": mock_doctor_repo,
-        "mapping_repo": mock_mapping_repo,
+        "doctor_service": doctor_service,
     }
+
 
 @pytest.fixture
 def api_client():
     """Unauthenticated DRF APIClient fixture."""
     return APIClient()
+
+
+@pytest.fixture
+def auth_user():
+    """Mock authenticated user instance."""
+    return MockUser(
+        id=1,
+        name="Dr. Administrator",
+        email="admin@hospital.org",
+        password="ValidPassword123!",
+        is_active=True,
+        is_staff=True
+    )
+
+
+@pytest.fixture
+def auth_client(api_client, auth_user):
+    """Authenticated DRF APIClient fixture."""
+    api_client.force_authenticate(user=auth_user)
+    api_client.test_user = auth_user
+    return api_client
