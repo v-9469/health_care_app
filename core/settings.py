@@ -41,11 +41,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
 
-    # Feature Apps will be added in their respective phases:
-    # Phase 1 -> 'apps.accounts'
-    # Phase 2 -> 'apps.patients'
-    # Phase 3 -> 'apps.doctors'
-    # Phase 4 -> 'apps.mappings'
+    # Domain Apps
+    'apps.accounts',
+    'apps.doctors',
 ]
 
 MIDDLEWARE = [
@@ -106,6 +104,9 @@ if env('DB_USE_SQLITE_FALLBACK') and os.environ.get('USE_SQLITE', 'False').lower
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
+
+# Custom User Model
+AUTH_USER_MODEL = 'accounts.User'
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
