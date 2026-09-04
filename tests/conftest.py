@@ -8,11 +8,13 @@ from tests.mocks import (
     MockUserRepository,
     MockDoctorRepository,
     MockPatientRepository,
+    MockMappingRepository,
     MockUser
 )
 from apps.accounts.services import AuthService, JWTTokenService
 from apps.doctors.services import DoctorService
 from apps.patients.services import PatientService
+from apps.mappings.services import MappingService
 
 
 @pytest.fixture(autouse=True)
@@ -30,6 +32,13 @@ def mock_container_dependencies():
     mock_patient_repo = MockPatientRepository()
     patient_service = PatientService(patient_repo=mock_patient_repo)
 
+    mock_mapping_repo = MockMappingRepository()
+    mapping_service = MappingService(
+        mapping_repo=mock_mapping_repo,
+        patient_repo=mock_patient_repo,
+        doctor_repo=mock_doctor_repo
+    )
+
     Container.register("user_repository", lambda: mock_user_repo)
     Container.register("token_service", lambda: token_service)
     Container.register("auth_service", lambda: auth_service)
@@ -37,6 +46,8 @@ def mock_container_dependencies():
     Container.register("doctor_service", lambda: doctor_service)
     Container.register("patient_repository", lambda: mock_patient_repo)
     Container.register("patient_service", lambda: patient_service)
+    Container.register("mapping_repository", lambda: mock_mapping_repo)
+    Container.register("mapping_service", lambda: mapping_service)
 
     return {
         "user_repo": mock_user_repo,
@@ -46,6 +57,8 @@ def mock_container_dependencies():
         "doctor_service": doctor_service,
         "patient_repo": mock_patient_repo,
         "patient_service": patient_service,
+        "mapping_repo": mock_mapping_repo,
+        "mapping_service": mapping_service,
     }
 
 

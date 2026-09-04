@@ -11,6 +11,8 @@ if TYPE_CHECKING:
     from apps.doctors.services import DoctorService
     from apps.patients.interfaces import IPatientRepository
     from apps.patients.services import PatientService
+    from apps.mappings.interfaces import IMappingRepository
+    from apps.mappings.services import MappingService
 
 
 class Container:
@@ -63,6 +65,18 @@ class Container:
             from apps.patients.services import PatientService
             return PatientService(patient_repo=cls.patient_repository())
 
+        if key == "mapping_repository":
+            from apps.mappings.repositories import DjangoMappingRepository
+            return DjangoMappingRepository()
+
+        if key == "mapping_service":
+            from apps.mappings.services import MappingService
+            return MappingService(
+                mapping_repo=cls.mapping_repository(),
+                patient_repo=cls.patient_repository(),
+                doctor_repo=cls.doctor_repository()
+            )
+
         raise KeyError(f"Dependency '{key}' not registered in DI container.")
 
     # Convenience helper methods:
@@ -93,3 +107,11 @@ class Container:
     @classmethod
     def patient_service(cls) -> "PatientService":
         return cls.get("patient_service")
+
+    @classmethod
+    def mapping_repository(cls) -> "IMappingRepository":
+        return cls.get("mapping_repository")
+
+    @classmethod
+    def mapping_service(cls) -> "MappingService":
+        return cls.get("mapping_service")

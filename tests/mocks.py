@@ -228,6 +228,9 @@ class MockMappingRepository:
     def list_all(self) -> List[MockMapping]:
         return list(self.mappings.values())
 
+    def list_by_user(self, user_id: int) -> List[MockMapping]:
+        return [m for m in self.mappings.values() if m.patient and getattr(m.patient, 'created_by_id', None) == user_id]
+
     def get_by_patient(self, patient_id: int) -> List[MockMapping]:
         return [m for m in self.mappings.values() if m.patient_id == patient_id]
 
