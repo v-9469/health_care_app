@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     from apps.accounts.services import AuthService
     from apps.doctors.interfaces import IDoctorRepository
     from apps.doctors.services import DoctorService
+    from apps.patients.interfaces import IPatientRepository
+    from apps.patients.services import PatientService
 
 
 class Container:
@@ -53,6 +55,14 @@ class Container:
             from apps.doctors.services import DoctorService
             return DoctorService(doctor_repo=cls.doctor_repository())
 
+        if key == "patient_repository":
+            from apps.patients.repositories import DjangoPatientRepository
+            return DjangoPatientRepository()
+
+        if key == "patient_service":
+            from apps.patients.services import PatientService
+            return PatientService(patient_repo=cls.patient_repository())
+
         raise KeyError(f"Dependency '{key}' not registered in DI container.")
 
     # Convenience helper methods:
@@ -75,3 +85,11 @@ class Container:
     @classmethod
     def doctor_service(cls) -> "DoctorService":
         return cls.get("doctor_service")
+
+    @classmethod
+    def patient_repository(cls) -> "IPatientRepository":
+        return cls.get("patient_repository")
+
+    @classmethod
+    def patient_service(cls) -> "PatientService":
+        return cls.get("patient_service")

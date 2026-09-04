@@ -28,6 +28,7 @@ class DoctorListCreateView(APIView):
         self.doctor_service = doctor_service or Container.doctor_service()
 
     @extend_schema(
+        operation_id="doctors_list",
         summary="List all doctors",
         description="Retrieves a list of all doctors. Supports filtering by specialization and text search.",
         parameters=[
@@ -56,6 +57,7 @@ class DoctorListCreateView(APIView):
         )
 
     @extend_schema(
+        operation_id="doctors_create",
         summary="Create a new doctor",
         description="Adds a new doctor to the system. Email must be unique.",
         request=DoctorSerializer,
@@ -102,6 +104,7 @@ class DoctorDetailView(APIView):
         self.doctor_service = doctor_service or Container.doctor_service()
 
     @extend_schema(
+        operation_id="doctors_retrieve",
         summary="Get doctor details",
         description="Retrieves full details of a specific doctor by ID.",
         responses={

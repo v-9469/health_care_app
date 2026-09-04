@@ -82,8 +82,15 @@ class MockPatientRepository:
             return None
         return patient
 
-    def list_by_user(self, user_id: int) -> List[MockPatient]:
-        return [p for p in self.patients.values() if p.created_by_id == user_id]
+    def list_by_user(self, user_id: int, search: Optional[str] = None) -> List[MockPatient]:
+        results = [p for p in self.patients.values() if p.created_by_id == user_id]
+        if search:
+            query = search.strip().lower()
+            results = [
+                p for p in results
+                if query in p.name.lower() or query in p.contact_number.lower() or (p.email and query in p.email.lower())
+            ]
+        return results
 
     def create(self, user_id: int, **data) -> MockPatient:
         patient = MockPatient(
